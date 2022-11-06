@@ -5,6 +5,7 @@ import json
 from flask import request, jsonify
 from pymongo import MongoClient
 from bson.json_util import dumps 
+import requests
 
 
 app = Flask(__name__)
@@ -72,14 +73,12 @@ def display():
  return jsonify(data)
 
 
-# own function <- test TEST TEST TEST
-@app.route('/test', methods=['GET', 'POST'])
-def test():
- testarr = []
- results = collection.find({})
- for x in results:
-  testarr.append(x)   
- return testarr
+# cloud function <- test TEST TEST TEST
+@app.route("/cloud-function", methods=["GET"])
+def hello():
+ url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/helloworld"
+ response=requests.get(url)
+ return(response.content) 
 
 #-------------------------------------------
 
