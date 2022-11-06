@@ -74,9 +74,9 @@ def display():
 
 
 # cloud function <- test TEST TEST TEST
-@app.route("/cloud-function", methods=["GET"])
+@app.route("/shop", methods=["GET"])
 def hello():
- url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/helloworld"
+ url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop"
  response=requests.get(url)
  return(response.content) 
 
