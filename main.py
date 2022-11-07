@@ -39,7 +39,9 @@ def submitted_form():
 #-------------------------------------------
 cluster = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
 db = cluster["Pythontest"]
-collection = db["Students"] 
+collection = db["Students"]
+
+
 
 def get_mongodb_items():
  # Search data from Mongodb
@@ -76,9 +78,13 @@ def display():
 # cloud function <- test TEST TEST TEST
 @app.route("/shop", methods=["GET"])
 def hello():
- url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop"
+ url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
  response=requests.get(url)
- return(response.content) 
+ print(response.request)
+ print(response)
+ print(response.content)
+
+ return render_template("shop.html", response=response.content)
 
 #-------------------------------------------
 
