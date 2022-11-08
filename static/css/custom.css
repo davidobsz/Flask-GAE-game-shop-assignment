@@ -23,4 +23,8 @@
 .navbar{
     size: 15px;
 }
+
+#shop-items {
+    list-style-type: none;
+}
    

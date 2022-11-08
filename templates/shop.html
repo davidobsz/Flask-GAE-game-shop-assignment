@@ -2,18 +2,11 @@
 {% set active_page = "about" %}
 {% block content %}
 <p>Shop Items
-</p>
-<ul>
-    <li>PS5</li>
-    <li>PS4</li>
-    <li>XBOX 1</li>
- <p>response:  <ul>{% for i in response %}
+ <ul id="shop-items">{% for i in response %}
      <li>
                 {{ i -}}
      </li>
             {% endfor %}
    </ul>
-
- </p>
 </ul>
 {% endblock %}
