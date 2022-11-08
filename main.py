@@ -80,11 +80,16 @@ def display():
 def hello():
  url= "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
  response=requests.get(url)
- print(response.request)
- print(response)
- print(response.content)
+ responseString = response.content
+ responseString = str(responseString)
+ responseString = responseString[3:-2]
 
- return render_template("shop.html", response=response.content)
+ responseString2 = "{\"items\":["+responseString+"]}"
+ data = json.loads(responseString2)
+ print(data)
+ print(data["items"][0]["name"])
+
+ return render_template("shop.html", response=data["items"])
 
 #-------------------------------------------
 

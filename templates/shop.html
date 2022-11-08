@@ -7,6 +7,13 @@
     <li>PS5</li>
     <li>PS4</li>
     <li>XBOX 1</li>
- <p>response: {{ response }}</p>
+ <p>response:  <ul>{% for i in response %}
+     <li>
+                {{ i -}}
+     </li>
+            {% endfor %}
+   </ul>
+
+ </p>
 </ul>
 {% endblock %}
