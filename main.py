@@ -113,8 +113,12 @@ def hello():
     return render_template("shop.html", response=data["items"])
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/registration", methods=["GET", "POST"])
 def firebase():
+    url = "https://us-central1-river-psyche-366910.cloudfunctions.net/registration"
+    response = requests.get(url)
+    response = requests.post(url, data="data")
+    print(response.content)
     error = ""
     try:
         if request.method == "POST":
@@ -128,14 +132,37 @@ def firebase():
             mydb.commit()
             print(mycursor.rowcount, "record inserted.")
     except mysql.connector.Error as e:
-        #print(e)
-        #print(e.errno)
-        #print(e.msg)
+        print(e)
+        print(e.errno)
+        print(e.msg)
         if(e.errno == 1062):
             error = "USERNAME OR EMAIL ALREADY USED"
+    return render_template("registration.html", error=error)
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    error = ""
+    try:
+        if request.method == "POST":
+            username = request.form.get("name")
+            password = request.form.get("password")
+            email = request.form.get("email")
+            sql = "SELECT * FROM  accounts WHERE username = '{}'".format(username)
+            print("sql:",sql)
+            mycursor.execute(sql)
+            fetch = mycursor.fetchall()
+            name = fetch[0][0]
+            passw = fetch[0][1]
 
+            if((name == username) and (passw == password)):
+                print("login success")
+                return render_template("home.html")
+            else:
+                error = "WRONG USERNAME OR PASSWORD"
+
+    except all as e:
+        print(e)
     return render_template("login.html", error=error)
 
 
