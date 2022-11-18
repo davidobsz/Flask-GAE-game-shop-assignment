@@ -29,6 +29,8 @@ def form():
     return render_template('register.html')
 
 
+# [END form]
+# [START submitted]
 @app.route('/submitted', methods=["GET", "POST"])
 def submitted_form():
     name = request.form['name']
