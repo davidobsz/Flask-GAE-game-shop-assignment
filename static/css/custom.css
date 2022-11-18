@@ -2,7 +2,9 @@
  * Padding for the body (to accomodate the fixed nav-bar).
  */
  body {
-    padding-top: 5rem;
+	 margin: 0px;
+	 padding: 0px;
+	 padding-top: 5rem;
    }
    /**
     * Responsive Text (apparently I'm on my own here)
@@ -26,5 +28,16 @@
 
 #shop-items {
     list-style-type: none;
+    text-align: center;
+    padding: 10px;
 }
+#shop-items-title{
+    text-align: center;
+    padding: 10px;
+}
+#shop-items li{
+	margin: 10px;
+	padding: 10px;
+}
+
    
