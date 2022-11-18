@@ -7,18 +7,10 @@ from bson.json_util import dumps
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask import jsonify
 from pymongo import MongoClient
-import mysql.connector
-from mysql.connector import Error, errorcode
-import gridfs
+
 
 app = Flask(__name__)
 logged_in = False
-mydb = mysql.connector.connect(host='localhost',
-                               database='userlogin',
-                               user='root',
-                               password='1234')
-mycursor = mydb.cursor()
-
 
 @app.route('/')
 @app.route('/home')
@@ -37,8 +29,6 @@ def form():
     return render_template('register.html')
 
 
-# [END form]
-# [START submitted]
 @app.route('/submitted', methods=["GET", "POST"])
 def submitted_form():
     name = request.form['name']
@@ -64,19 +54,6 @@ products=db["fs.files"]
 
 
 
-file = r"C:\Users\44784\Pictures\Screenshot (2).png"
-fs = gridfs.GridFS(db)
-#Open the image in read-only format.
-with open(file, 'rb') as f:
-    contents = f.read()
-
-
-#Now store/put the image via GridFs object.
-#fs.put(contents, filename="file")
-
-f = fs.find_one({"filename": "file"})
-image = f.read()
-print(image)
 
 
 def get_mongodb_items():
@@ -126,65 +103,14 @@ def hello():
     data = json.loads(responseString2)
     print(data)
     print(data["items"][0]["name"])
+    itemArray = data["items"]
+    print(itemArray[0])
 
     return render_template("shop.html", response=data["items"])
 
-
-@app.route("/registration", methods=["GET", "POST"])
-def firebase():
-    url = "https://us-central1-river-psyche-366910.cloudfunctions.net/registration"
-    response = requests.get(url)
-    response = requests.post(url, data="data")
-    print(response.content)
-    error = ""
-    try:
-        if request.method == "POST":
-            username = request.form.get("name")
-            password = request.form.get("password")
-            email = request.form.get("email")
-            print(username, password, email)
-            sql = "INSERT INTO accounts VALUES('{}', {}, '{}')".format(username, password, email)
-            print(sql)
-            mycursor.execute(sql)
-            mydb.commit()
-            print(mycursor.rowcount, "record inserted.")
-    except mysql.connector.Error as e:
-        print(e)
-        print(e.errno)
-        print(e.msg)
-        if (e.errno == 1062):
-            error = "USERNAME OR EMAIL ALREADY USED"
-    return render_template("registration.html", error=error)
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    success = ""
-    error = ""
-    try:
-        if request.method == "POST":
-            username = request.form.get("name")
-            password = request.form.get("password")
-            sql = "SELECT * FROM  accounts WHERE username = '{}'".format(username)
-            print("sql:", sql)
-            mycursor.execute(sql)
-            fetch = mycursor.fetchall()
-            usrname = fetch[0][0]
-            passw = fetch[0][1]
-
-            if ((usrname == username) and (passw == password)):
-                print("login success")
-                global logged_in
-                logged_in = True
-                success = "Successfully logged in as {}".format(usrname)
-                return render_template("logged_in.html", username=usrname)
-            else:
-                error = "WRONG USERNAME OR PASSWORD"
-
-    except all as e:
-        print(e)
-    return render_template("login.html", error=error, logged_in=success)
-
+    return render_template("login.html")
 
 # -------------------------------------------
 
