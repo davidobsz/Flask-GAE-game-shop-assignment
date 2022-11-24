@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% set active_page = "write-reviews" %}
+{% block content %}
+
+<h4><u>Reviews</u></h4>
+<form id="review-form" method="post" action="{{ url_for('comments') }}">
+    <input type="text" placeholder="Name" name="name"><br><br>
+    <textarea name="review" rows="5" cols="50" placeholder="Write your review here"></textarea><br><br>
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}

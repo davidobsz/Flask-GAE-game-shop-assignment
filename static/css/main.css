@@ -6,13 +6,12 @@
 }
 
 body {
-  background-color: lightgray;
+
 }
 
 h1 {
   margin-bottom: 8%;
   text-align: center;
-  color: Gray;
   letter-spacing: 0.1em;
 }
 
@@ -48,10 +47,11 @@ input, button {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   /* horizontal align */
   width: 40vw;
-  margin-left: 30vw;
   /* vertical align */
   height: 70vh;
   margin-top: 15vh;
+  margin-left: 25%;
+  text-align: center;
 }
 
 #submit, #create-acct-btn {

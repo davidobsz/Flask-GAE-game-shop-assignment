@@ -8,9 +8,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask import jsonify
 from pymongo import MongoClient
 
-
 app = Flask(__name__)
 logged_in = False
+
 
 @app.route('/')
 @app.route('/home')
@@ -52,10 +52,7 @@ def submitted_form():
 cluster = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
 db = cluster["Pythontest"]
 collection = db["Students"]
-products=db["fs.files"]
-
-
-
+products = db["fs.files"]
 
 
 def get_mongodb_items():
@@ -110,11 +107,51 @@ def hello():
 
     return render_template("shop.html", response=data["items"])
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return render_template("login.html")
 
-# -------------------------------------------
+
+@app.route("/write-reviews", methods=["GET", "POST"])
+def writeReviews():
+    return render_template("write-reviews.html")\
+
+
+
+@app.route("/comments", methods=["GET", "POST"])
+def comments():
+    global name, review
+    url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/reviews"
+    response = requests.get(url)
+    responseString = response.content
+    responseString = str(responseString)
+    responseString = responseString[3:-2]
+
+    responseString2 = "{\"items\":[" + responseString + "]}"
+    data = json.loads(responseString2)
+    print(data)
+    print("RESPONSE STRING FROM CLOUD FUNCTION", responseString)
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    # connect to the db
+    db = client.Shop
+    collection = db.reviews
+
+    if request.method == "POST":
+        name = request.form["name"]
+        review = request.form["review"]
+
+        data = {
+            "name": name,
+            "review": review
+        }
+        #insert_user = collection.insert_one(data)
+
+    myCursor = db.reviews.find({})
+    list_cur = list(myCursor)
+    print(list_cur)
+
+    return render_template("comments.html", response=list_cur)
 
 @app.errorhandler(500)
 def server_error(e):

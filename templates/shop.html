@@ -1,16 +1,35 @@
 {% extends "base.html" %}
 {% set active_page = "shop" %}
 {% block content %}
-    <p id="shop-items-title">Shop Items</p>
+    <p id="shop-items-title"><u>Shop Items</u></p>
  <ul id="shop-items">{% for i in response %}
-     <li>
-           <figure>
-               <img src="{{ i.img }}">
-               <figcaption>{{ i.name }}<br>Price: £{{ i.price }}</figcaption>
-           </figure>
+     <ul class="item-container">
+
+     <li class="image-li">
+         <h5><u>{{ i.name }}</u></h5><br>
+        <figure>
+            <img src="{{ i.img }}"><br>
+        </figure>
      </li>
+     <li id="descriptor-li">
+        <div class="specs">
+            <h5>Specs:</h5>
+            <p>
+            PRICE: £{{ i.price }}<br>
+            RAM: {{ i.ram }}<br>
+            STORAGE: {{ i.storage }}<br>
+            RELEASED: {{ i.releaseDate}}<br>
+            CPU: {{ i.cpu }}<br>
+            BLUETOOTH: {{ i.bluetooth }}<br>
+            GPU: {{ i.gpu }}
+            </p>
+
+        </div>
+     </li>
+
+     </ul>
             {% endfor %}
-   </ul>
+
 </ul>
 
 

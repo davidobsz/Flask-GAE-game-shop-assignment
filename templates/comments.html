@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set active_page = "comments" %}
+{% block content %}
+      <div id="review-div">
+    <h5>Previous comments: </h5>
+    <ul id="previous-comments-ul">
+        {% for i in response %}
+        <li>
+            <p>Name: {{ i.name }}</p>
+            <p>Review: {{ i.review }}</p>
+        </li>
+    </ul>
+      {% endfor %}
+    </div>
+
+{% endblock %}

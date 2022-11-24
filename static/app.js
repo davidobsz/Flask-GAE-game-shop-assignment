@@ -11,7 +11,7 @@ const firebaseConfig = {
   appId: "1:427956143423:web:f44e63513bbbcdabe57f8a",
   measurementId: "G-FRVC2X3NDD"
 };
-
+var logged_in = false
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
@@ -62,6 +62,7 @@ createacctbtn.addEventListener("click", function() {
       const user = userCredential.user;
       // ...
       window.alert("Success! Account created.");
+
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -71,6 +72,8 @@ createacctbtn.addEventListener("click", function() {
     });
   }
 });
+
+
 
 submitButton.addEventListener("click", function() {
   email = emailInput.value;
@@ -84,6 +87,8 @@ submitButton.addEventListener("click", function() {
       const user = userCredential.user;
       console.log("Success! Welcome back!");
       window.alert("Success! Welcome back!");
+      logged_in = true
+
       // ...
     })
     .catch((error) => {
@@ -103,5 +108,17 @@ returnBtn.addEventListener("click", function() {
     main.style.display = "block";
     createacct.style.display = "none";
 });
+
+if (logged_in == true){
+    var names = email
+    $.ajax({
+          type: "POST",
+          contentType: "application/json;charset=utf-8",
+          url: "/test",
+          traditional: "true",
+          data: JSON.stringify({names}),
+          dataType: "json"
+          });
+}
 
 
