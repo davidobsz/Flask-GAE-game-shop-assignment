@@ -85,9 +85,11 @@ submitButton.addEventListener("click", function() {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
+      logged_in = true
       console.log("Success! Welcome back!");
       window.alert("Success! Welcome back!");
-      logged_in = true
+      myfunction()
+
 
       // ...
     })
@@ -108,17 +110,21 @@ returnBtn.addEventListener("click", function() {
     main.style.display = "block";
     createacct.style.display = "none";
 });
+    function myfunction() {
 
-if (logged_in == true){
-    var names = email
-    $.ajax({
-          type: "POST",
-          contentType: "application/json;charset=utf-8",
-          url: "/test",
-          traditional: "true",
-          data: JSON.stringify({names}),
-          dataType: "json"
-          });
+        const firstname = email
+        const lastname = "none"
+
+
+        const dict_values = {firstname, lastname} //Pass the javascript variables to a dictionary.
+        const s = JSON.stringify(dict_values); // Stringify converts a JavaScript object or value to a JSON string
+        console.log(s); // Prints the variables to console window, which are in the JSON format
+        $.ajax({
+            url:"/logged-in",
+            type:"POST",
+            contentType: "application/json",
+            data: JSON.stringify(s)});
+
 }
 
 

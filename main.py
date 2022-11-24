@@ -11,7 +11,7 @@ import datetime
 app = Flask(__name__)
 logged_in = False
 
-
+email_name =""
 @app.route('/')
 @app.route('/home')
 def home():
@@ -112,11 +112,26 @@ def hello():
 def login():
     return render_template("login.html")
 
+@app.route("/logged-in", methods=["POST"])
+def logged_in():
+    global logged_in, email_name
+    output = request.get_json()
+    print(output)  # This is the output that was stored in the JSON within the browser
+    print(type(output))
+    result = json.loads(output)  # this converts the json output to a python dictionary
+     # this shows the json converted as a python dictionary
+    email_name = result["firstname"]
+    logged_in = True
+    print(email_name)
+    prints()
+    return result
+def prints():
+    print("prints function",email_name)
+
 
 @app.route("/write-reviews", methods=["GET", "POST"])
 def writeReviews():
     return render_template("write-reviews.html")\
-
 
 
 @app.route("/comments", methods=["GET", "POST"])
@@ -152,6 +167,19 @@ def comments():
 
     return render_template("comments.html", response=list_cur)
 
+
+@app.route('/test2')
+def index():
+    return render_template('test.html')
+@app.route('/test', methods=['POST'])
+def test():
+    output = request.get_json()
+    print(output) # This is the output that was stored in the JSON within the browser
+    print(type(output))
+    result = json.loads(output) #this converts the json output to a python dictionary
+    print(result) # Printing the new dictionary
+    print(type(result))#this shows the json converted as a python dictionary
+    return result
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.
