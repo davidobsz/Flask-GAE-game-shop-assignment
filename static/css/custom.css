@@ -78,7 +78,21 @@ div {
 .about-text{
     text-align: center;
 }
+.previous-comments-ul {
+    list-style-type: none;
+    border-style: solid;
+    border-width: 0.2px;
+    border-color: dimgray;
+}
 
+.previous-comments-ul li{
+    display: inline-block;
+    margin-right: 50px;
+    padding-top: 10px;
+}
+.date-time{
+    font-size: 13px;
+}
 
 
    

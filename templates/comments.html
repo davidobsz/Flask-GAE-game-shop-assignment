@@ -2,15 +2,18 @@
 {% set active_page = "comments" %}
 {% block content %}
       <div id="review-div">
-    <h5>Previous comments: </h5>
-    <ul id="previous-comments-ul">
-        {% for i in response %}
+    <h5>Previous reviews: </h5>
+  {% for i in response %}
+    <ul class="previous-comments-ul">
+
         <li>
-            <p>Name: {{ i.name }}</p>
-            <p>Review: {{ i.review }}</p>
+            <p>{{ i.name }}</p>
+            <p class="date-time">{{ i.reviewDate }}</p>
         </li>
+        <li><p>{{ i.review }}</p></li>
+
     </ul>
-      {% endfor %}
+    {% endfor %}
     </div>
 
 {% endblock %}

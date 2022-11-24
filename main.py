@@ -7,7 +7,7 @@ from bson.json_util import dumps
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask import jsonify
 from pymongo import MongoClient
-
+import datetime
 app = Flask(__name__)
 logged_in = False
 
@@ -130,8 +130,7 @@ def comments():
 
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
-    print(data)
-    print("RESPONSE STRING FROM CLOUD FUNCTION", responseString)
+
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     # connect to the db
     db = client.Shop
@@ -140,16 +139,16 @@ def comments():
     if request.method == "POST":
         name = request.form["name"]
         review = request.form["review"]
-
+        date = str(datetime.datetime.now().strftime("%A %d-%m-%Y, %H:%M:%S"))
         data = {
             "name": name,
-            "review": review
+            "review": review,
+            "reviewDate": date
         }
-        #insert_user = collection.insert_one(data)
+        insert_user = collection.insert_one(data)
 
     myCursor = db.reviews.find({})
     list_cur = list(myCursor)
-    print(list_cur)
 
     return render_template("comments.html", response=list_cur)
 
