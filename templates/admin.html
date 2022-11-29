@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p id="shop-items-title"><u>Shop Items</u></p>
+ <ul>{% for i in response %}
+     <ul>
+
+     <li>
+         <h5>{{ i.name }}</h5>
+         <p>Current stock: {{ i.stock }}</p>
+         <p>Edit</p>
+         <form class="review-form" method="post" action="">
+            <input id="stock-holder" type="text" placeholder=" update stock count" name="item"><br>
+            <button type="submit" id="submit-edit">Submit</button>
+             <input type="text" class="hide-this"name="itemName" value="{{ i.name }}"><br><br>
+        </form>
+     </li>
+
+     </ul>
+            {% endfor %}
+
+</ul>
+
+
+
+<script type="text/javascript">
+
+        const els = document.querySelectorAll('.hide-this')
+    for (const el of [...els]) {
+        el.style.visibility = "hidden"
+}
+        document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+        if (sessionStorage.getItem("email") == null){
+
+    } else if ((sessionStorage.getItem("email") == "admin@email.com")){
+
+        }
+    if (((sessionStorage.getItem("email") != "admin@email.com"))){
+        location.assign("404")
+    }
+
+        if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+</script>
+{% endblock %}

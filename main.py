@@ -105,6 +105,19 @@ def hello():
     itemArray = data["items"]
     print(itemArray[0])
 
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    # connect to the db
+    db = client.Shop
+    collection = db.Items
+
+    if request.method == "POST":
+        item = request.form["item"]
+        itemName = request.form["itemName"]
+
+        print("HERE I AM", item, itemName)
+        #insert_user = collection.insert_one(data)
+
+
     return render_template("shop.html", response=data["items"])
 
 
@@ -172,6 +185,35 @@ def comments():
 @app.route('/sign_out.html')
 def sign_out():
     return render_template('sign_out.html')
+
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
+    response = requests.get(url)
+    responseString = response.content
+    responseString = str(responseString)
+    responseString = responseString[3:-2]
+
+    responseString2 = "{\"items\":[" + responseString + "]}"
+    data = json.loads(responseString2)
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    db = client.Shop
+    collection = db.Items
+
+    # collection.find({name: itemName})
+
+
+    if request.method == "POST":
+        item = request.form["item"]
+        itemName = request.form["itemName"]
+        a = collection.find_one({"name": f"{itemName}"})
+        print(item, itemName, a)
+        myquery = {"name": f"{itemName}"}
+        newvalues = {"$set": {"stock": f"{item}"}}
+
+        collection.update_one(myquery, newvalues)
+    return render_template("admin.html", response=data["items"])
 @app.route('/test2')
 def index():
     return render_template('test.html')

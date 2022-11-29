@@ -21,10 +21,12 @@
             RELEASED: {{ i.releaseDate}}<br>
             CPU: {{ i.cpu }}<br>
             BLUETOOTH: {{ i.bluetooth }}<br>
-            GPU: {{ i.gpu }}
+            GPU: {{ i.gpu }}<br>
+            <strong class="stocks-class">LEFT IN STOCK: {{ i.stock }}</strong>
             </p>
 
         </div>
+
      </li>
 
      </ul>
@@ -38,6 +40,11 @@
         document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
         if (sessionStorage.getItem("email") == null){
         document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+
+
+                if (sessionStorage.getItem("email") == "admin@email.com"){
+        document.getElementsByClassName("review-form").item()
     }
 </script>
 {% endblock %}
