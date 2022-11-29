@@ -59,5 +59,9 @@ if (sessionStorage.getItem("email") != null){
     document.getElementById("paragraph2").innerHTML = "Already logged in."
     document.getElementById("submit").style.visibility = "hidden"
 }
+
+if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
 </script>
 {% endblock %}

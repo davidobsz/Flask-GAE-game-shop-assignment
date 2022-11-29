@@ -3,6 +3,11 @@
     <button onclick="clearUser()" id="sign-out">Sign Out</button>
 
     <script>
+
+    if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+
     function clearUser(){
         sessionStorage.clear()
         location.reload()

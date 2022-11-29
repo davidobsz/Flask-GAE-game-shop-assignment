@@ -90,7 +90,7 @@ submitButton.addEventListener("click", function() {
       window.alert("Success! Welcome back!");
       sessionStorage.setItem("email", email)
       myfunction()
-
+      location.reload()
 
       // ...
     })

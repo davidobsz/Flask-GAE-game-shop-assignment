@@ -18,5 +18,9 @@
             document.getElementById("paragraph").innerHTML = "Must be logged in to write a review."
             document.getElementById("submit-review").style.visibility = "hidden"
         }
+
+        if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
 </script>
 {% endblock %}

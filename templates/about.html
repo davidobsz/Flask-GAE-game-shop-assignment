@@ -3,6 +3,10 @@
 {% block content %}
     <script type="text/javascript">
         document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+
+        if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
     </script>
 <p class="about-text">Contact information:
 </p>
