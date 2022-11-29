@@ -31,6 +31,7 @@
   </div>
   <p id="false-false" style="visibility: hidden">False</p>
   <script type = "module" src = "/static/app.js"></script>
+<p id="paragraph2"></p>
 </body>
 </html>
 
@@ -52,6 +53,11 @@
             contentType: "application/json",
             data: JSON.stringify(s)});
 
+}
+
+if (sessionStorage.getItem("email") != null){
+    document.getElementById("paragraph2").innerHTML = "Already logged in."
+    document.getElementById("submit").style.visibility = "hidden"
 }
 </script>
 {% endblock %}

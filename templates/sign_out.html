@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <button onclick="clearUser()" id="sign-out">Sign Out</button>
+
+    <script>
+    function clearUser(){
+        sessionStorage.clear()
+        location.reload()
+        alert("Successfully signed out")
+    }
+    </script>
+
+
+<script type="text/javascript">
+        document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+</script>
+{% endblock %}

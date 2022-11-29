@@ -169,7 +169,9 @@ def comments():
 
     return render_template("comments.html", response=list_cur)
 
-
+@app.route('/sign_out.html')
+def sign_out():
+    return render_template('sign_out.html')
 @app.route('/test2')
 def index():
     return render_template('test.html')
