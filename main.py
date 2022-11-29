@@ -116,17 +116,19 @@ def login():
 def logged_in():
     global logged_in, email_name
     output = request.get_json()
-    print(output)  # This is the output that was stored in the JSON within the browser
-    print(type(output))
+    #print(output)  # This is the output that was stored in the JSON within the browser
+    #print(type(output))
     result = json.loads(output)  # this converts the json output to a python dictionary
      # this shows the json converted as a python dictionary
     email_name = result["firstname"]
     logged_in = True
-    print(email_name)
+    #print(email_name)
     prints()
+
     return result
 def prints():
-    print("prints function",email_name)
+    print("prints function",email_name, logged_in)
+
 
 
 @app.route("/write-reviews", methods=["GET", "POST"])
@@ -180,6 +182,10 @@ def test():
     print(result) # Printing the new dictionary
     print(type(result))#this shows the json converted as a python dictionary
     return result
+
+
+
+
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% set active_page = "about" %}
 {% block content %}
+    <script type="text/javascript">
+        document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+    </script>
 <p class="about-text">Contact information:
 </p>
 <ul id="contact-info">

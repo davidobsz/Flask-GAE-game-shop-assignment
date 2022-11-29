@@ -88,6 +88,7 @@ submitButton.addEventListener("click", function() {
       logged_in = true
       console.log("Success! Welcome back!");
       window.alert("Success! Welcome back!");
+      sessionStorage.setItem("email", email)
       myfunction()
 
 
@@ -125,6 +126,16 @@ returnBtn.addEventListener("click", function() {
             contentType: "application/json",
             data: JSON.stringify(s)});
 
+}
+
+
+
+if (sessionStorage.getItem('email') != null){
+    loadLogggedInUser()
+}
+
+function  loadLogggedInUser(){
+    document.getElementById("false-false").innerHTML = sessionStorage.getItem("email")
 }
 
 

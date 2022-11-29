@@ -4,8 +4,17 @@
 
 <h4><u>Reviews</u></h4>
 <form id="review-form" method="post" action="{{ url_for('comments') }}">
-    <input type="text" placeholder="Name" name="name"><br><br>
+    <input id="name-holder" type="text" placeholder="Name" name="name"><br><br>
     <textarea name="review" rows="5" cols="50" placeholder="Write your review here"></textarea><br><br>
     <button type="submit">Submit</button>
 </form>
+<script type="text/javascript">
+        document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+        if (sessionStorage.getItem("email") != null){
+            document.getElementById("name-holder").value = sessionStorage.getItem("email")
+            document.getElementById("name-holder").style.visibility = "hidden"
+        } else {
+            alert("Must be logged in to write review")
+        }
+</script>
 {% endblock %}
