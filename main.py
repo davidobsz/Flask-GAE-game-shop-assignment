@@ -201,19 +201,77 @@ def admin():
     db = client.Shop
     collection = db.Items
 
-    # collection.find({name: itemName})
-
-
     if request.method == "POST":
         item = request.form["item"]
         itemName = request.form["itemName"]
-        a = collection.find_one({"name": f"{itemName}"})
-        print(item, itemName, a)
-        myquery = {"name": f"{itemName}"}
-        newvalues = {"$set": {"stock": f"{item}"}}
 
-        collection.update_one(myquery, newvalues)
+        if item and itemName:
+            a = collection.find_one({"name": f"{itemName}"})
+            print(item, itemName, a)
+            myquery = {"name": f"{itemName}"}
+            newvalues = {"$set": {"stock": f"{item}"}}
+            collection.update_one(myquery, newvalues)
+
+
     return render_template("admin.html", response=data["items"])
+
+@app.route("/add_items", methods=["GET", "POST"])
+def addItems():
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    db = client.Shop
+    collection = db.Items
+
+    if request.method == "POST":
+        name = request.form["name"]
+        price = request.form["price"]
+        bluetooth = request.form["bluetooth"]
+        img = request.form["img"]
+        cpu = request.form["cpu"]
+        releaseDate = request.form["releaseDate"]
+        storage = request.form["storage"]
+        ram = request.form["ram"]
+        stock = request.form["stock"]
+        gpu = request.form["gpu"]
+
+        collection.insert_one({
+            "name": f"{name}",
+            "price": f"{price}",
+            "bluetooth": f"{bluetooth}",
+            "img": f"{img}",
+            "cpu": f"{cpu}",
+            "releaseDate": f"{releaseDate}",
+            "storage": f"{storage}",
+            "ram": f"{ram}",
+            "stock": f"{stock}",
+            "gpu": f"{gpu}"
+        })
+
+    return render_template("add_items.html")
+
+@app.route("/delete_items", methods=["POST", "GET"])
+def deleteItems():
+    url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
+    response = requests.get(url)
+    responseString = response.content
+    responseString = str(responseString)
+    responseString = responseString[3:-2]
+
+    responseString2 = "{\"items\":[" + responseString + "]}"
+    data = json.loads(responseString2)
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    db = client.Shop
+    collection = db.Items
+
+    if request.method == "POST":
+
+        item = request.form["item"]
+
+        print(item)
+        myquery = {"name": f"{item}"}
+
+        collection.delete_one({"name": f"{item}"})
+
+    return render_template("delete_items.html", response=data["items"])
 @app.route('/test2')
 def index():
     return render_template('test.html')

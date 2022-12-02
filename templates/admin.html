@@ -2,6 +2,9 @@
 
 {% block content %}
     <p id="shop-items-title"><u>Shop Items</u></p>
+
+    <form action="/add_items"><button>Add items</button></form>
+    <form action="/delete_items"><button>Delete items</button></form>
  <ul>{% for i in response %}
      <ul>
 

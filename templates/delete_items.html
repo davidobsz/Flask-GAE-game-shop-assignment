@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="/admin"><button>Admin Page</button></form>
+ <ul>{% for i in response %}
+     <ul>
+
+     <li>
+         <h5>{{ i.name }}</h5>
+         <form method="post">
+             <input type="text" value="{{ i.name }}" name="item">
+             <button type="submit">DELETE</button>
+         </form>
+
+     </li>
+
+     </ul>
+            {% endfor %}
+
+</ul>
+
+
+{% endblock %}
+<script type="text/javascript">
+    document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+    if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+
+    if (sessionStorage.getItem("email") == "admin@email.com"){
+        document.getElementsByClassName("review-form").item()
+    }
+    </script>

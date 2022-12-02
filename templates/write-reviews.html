@@ -13,7 +13,7 @@
         document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
         if (sessionStorage.getItem("email") != null){
             document.getElementById("name-holder").value = sessionStorage.getItem("email")
-            document.getElementById("name-holder").style.visibility = "hidden"
+            //document.getElementById("name-holder").style.visibility = "hidden"
         } else {
             document.getElementById("paragraph").innerHTML = "Must be logged in to write a review."
             document.getElementById("submit-review").style.visibility = "hidden"

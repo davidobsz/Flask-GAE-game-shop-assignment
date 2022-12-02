@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <form action="/admin"><button>Admin Page</button></form>
+
+    <h5>Add new item to stock</h5><br>
+<form method="post">
+        <input type="text" placeholder="name" name="name" value="0"><br>
+        <input type="text" placeholder="price" name="price"value="0"><br>
+        <input type="text" placeholder="img" name="img"value="0"><br>
+        <input type="text" placeholder="bluetooth" name="bluetooth"value="0"><br>
+        <input type="text" placeholder="cpu" name="cpu" value="0"><br>
+        <input type="text" placeholder="gpu" name="gpu" value="0"><br>
+        <input type="text" placeholder="ram" name="ram" value="0"><br>
+        <input type="text" placeholder="releaseDate" name="releaseDate" value="0"><br>
+        <input type="text" placeholder="storage" name="storage" value="0"><br>
+        <input type="text" placeholder="stock" name="stock" value="0"><br>
+        <button type="submit">Submit</button>
+</form>
+
+
+{% endblock %}
+<script type="text/javascript">
+    document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+    if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+
+    if (sessionStorage.getItem("email") == "admin@email.com"){
+        document.getElementsByClassName("review-form").item()
+    }
+    </script>
