@@ -1,38 +1,126 @@
 {% extends "base.html" %}
 {% set active_page = "shop" %}
 {% block content %}
+
+<style>
+  /* Style the products container */
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+  }
+
+  /* Style the individual product container */
+  .product {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 20px;
+    text-align: center;
+    width: 250px;
+  }
+
+  /* Style the product image */
+  .product img {
+    height: 100px;
+  }
+
+  /* Style the product name */
+  .product h3 {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Style the product price */
+  .product p {
+    color: #333;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Style the add to basket button */
+  .product button {
+    background-color: #333;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  /* Style the add to basket button hover state */
+  .product button:hover {
+    background-color: #222;
+  }
+</style>
+
+
     <p id="shop-items-title"><u>Shop Items</u></p>
- <ul id="shop-items">{% for i in response %}
-     <ul class="item-container">
 
-     <li class="image-li">
-         <h5><u>{{ i.name }}</u></h5><br>
-        <figure>
-            <img src="{{ i.img }}"><br>
-        </figure>
-     </li>
-     <li id="descriptor-li">
-        <div class="specs">
-            <h5>Specs:</h5>
-            <p>
-            PRICE: £{{ i.price }}<br>
-            RAM: {{ i.ram }}<br>
-            STORAGE: {{ i.storage }}<br>
-            RELEASED: {{ i.releaseDate}}<br>
-            CPU: {{ i.cpu }}<br>
-            BLUETOOTH: {{ i.bluetooth }}<br>
-            GPU: {{ i.gpu }}<br>
+
+    <body>
+    <div class="products"> {% for i in response %}
+        <div class="product">
+          <img src="{% if i.img != " 0 "or "null" or 0 %} {{ i.img }} {% elif i.img == "null" %} {{ "https://via.placeholder.com/100x100" }} {% endif %}">
+          <h3>{{ i.name }}</h3>
+          <p>£ {{ i.price }}</p>
+            <div>
+                <p>RAM: {{ i.ram }}</p>
+                <p>STORAGE: {{ i.storage }}</p>
+                <p>RELEASED: {{ i.releaseDate}}</p>
+                <p>CPU: {{ i.cpu }}</p>
+                <p>BLUETOOTH: {{ i.bluetooth }}</p>
+                <p>GPU: {{ i.gpu }}</p>
             <strong class="stocks-class">LEFT IN STOCK: {{ i.stock }}</strong>
-            </p>
+            </div>
+          <button onclick="addToBasket('{{ i.name }}')">Add to basket</button>
 
-        </div>
-
-     </li>
-
-     </ul>
-            {% endfor %}
-
-</ul>
+        <!-- Add more products here -->
+      </div>{% endfor %}
+    </div>
+  <script>
+    // Define a function to add an item to the basket
+    function addToBasket(item) {
+      alert(`${item} added to basket`);
+    }
+  </script>
+{# <ul id="shop-items">{% for i in response %}#}
+{#     <ul class="item-container">#}
+{##}
+{#     <li class="image-li">#}
+{#         <h5><u>{{ i.name }}</u></h5><br>#}
+{#        <figure>#}
+{#            <img src="{{ i.img }}"><br>#}
+{#        </figure>#}
+{#     </li>#}
+{#     <li id="descriptor-li">#}
+{#        <div class="specs">#}
+{#            <h5>Specs:</h5>#}
+{#            <p>#}
+{#            PRICE: £{{ i.price }}<br>#}
+{#            RAM: {{ i.ram }}<br>#}
+{#            STORAGE: {{ i.storage }}<br>#}
+{#            RELEASED: {{ i.releaseDate}}<br>#}
+{#            CPU: {{ i.cpu }}<br>#}
+{#            BLUETOOTH: {{ i.bluetooth }}<br>#}
+{#            GPU: {{ i.gpu }}<br>#}
+{#            <strong class="stocks-class">LEFT IN STOCK: {{ i.stock }}</strong>#}
+{#            </p>#}
+{##}
+{#        </div>#}
+{##}
+{#     </li>#}
+{##}
+{#     </ul>#}
+{#            {% endfor %}#}
+{##}
+{#</ul>#}
 
 
 
@@ -43,8 +131,7 @@
     }
 
 
-                if (sessionStorage.getItem("email") == "admin@email.com"){
-        document.getElementsByClassName("review-form").item()
-    }
+
 </script>
+
 {% endblock %}
