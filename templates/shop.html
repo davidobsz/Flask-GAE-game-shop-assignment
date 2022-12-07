@@ -79,10 +79,28 @@
                 <p>GPU: {{ i.gpu }}</p>
             <strong class="stocks-class">LEFT IN STOCK: {{ i.stock }}</strong>
             </div>
-          <button onclick="addToBasket('{{ i.name }}')">Add to basket</button>
+        <form method="post">
+            <input value="{{ i.name }}" name="product" class="hide">
+            <input id="hidden" class="needemail" value="" name="emailusername" class="hide">
+            <style>
+            .hide{
+                visibility: hidden;
+            }
+            #hidden {
+                visibility: hidden;
+            }
+            </style>
+            <button type="submit" onclick="addToBasket('{{ i.name }}')">Add to basket</button>
+        </form>
 
         <!-- Add more products here -->
       </div>{% endfor %}
+        <script>
+        var collections = document.getElementsByClassName("needemail");
+        for (let i = 0; i < collections.length; i++) {
+            collections[i].value = sessionStorage.getItem("email")
+        }
+        </script>
     </div>
   <script>
     // Define a function to add an item to the basket

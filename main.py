@@ -8,10 +8,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask import jsonify
 from pymongo import MongoClient
 import datetime
+import os
 app = Flask(__name__)
 logged_in = False
 
-email_name =""
+email_name = ""
 @app.route('/')
 @app.route('/home')
 def home():
@@ -111,12 +112,13 @@ def hello():
     collection = db.Items
 
     if request.method == "POST":
-        item = request.form["item"]
-        itemName = request.form["itemName"]
+        product = request.form["product"]
+        emailusername = request.form["emailusername"]
 
-        print("HERE I AM", item, itemName)
-        #insert_user = collection.insert_one(data)
+        print("PRODUCT ,", product)
+        collection = db.basket
 
+        collection.insert_one({"email": f"{emailusername}", "product": f"{product}"})
 
     return render_template("shop.html", response=data["items"])
 
@@ -136,6 +138,12 @@ def logged_in():
     email_name = result["firstname"]
     logged_in = True
     #print(email_name)
+
+    # Set environment variables
+    os.environ['email'] = email_name
+
+    # get the environment variable
+
     prints()
 
     return result
@@ -272,22 +280,27 @@ def deleteItems():
         collection.delete_one({"name": f"{item}"})
 
     return render_template("delete_items.html", response=data["items"])
-@app.route('/test2')
-def index():
-    return render_template('test.html')
-@app.route('/test', methods=['POST'])
-def test():
-    output = request.get_json()
-    print(output) # This is the output that was stored in the JSON within the browser
-    print(type(output))
-    result = json.loads(output) #this converts the json output to a python dictionary
-    print(result) # Printing the new dictionary
-    print(type(result))#this shows the json converted as a python dictionary
-    return result
 
 
+@app.route("/basket", methods=["GET", "POST"])
+def basket():
+    url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/get-basket-items"
+    response = requests.get(url)
+    responseString = response.content
+    responseString = str(responseString)
+    responseString = responseString[3:-2]
+    responseString2 = "{\"items\":[" + responseString + "]}"
+    data = json.loads(responseString2)
+    product_list = []
+    #print(" this data now", data)
+    for x in data["items"]:
+        print(x["email"], x["product"], os.getenv('email'))
+        if x["email"] == os.getenv('email'):
+            product_list.append(x["product"])
+    print(product_list, "product list")
+    print("os stuff",os.getenv('email'))
 
-
+    return render_template("basket.html", response=product_list)
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.

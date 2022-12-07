@@ -68,7 +68,7 @@ createacctbtn.addEventListener("click", function() {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ..
-      window.alert("Error occurred. Try again.");
+      //window.alert("Error occurred. Try again.");
     });
   }
 });
@@ -86,7 +86,6 @@ submitButton.addEventListener("click", function() {
       // Signed in
       const user = userCredential.user;
       logged_in = true
-      console.log("Success! Welcome back!");
       window.alert("Success! Welcome back!");
       sessionStorage.setItem("email", email)
       myfunction()

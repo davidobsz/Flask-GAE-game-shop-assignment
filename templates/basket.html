@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set active_page = "basket" %}
+{% block content %}
+    <script type="text/javascript">
+        document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+
+        if (sessionStorage.getItem("email") == null){
+        document.getElementById("sign-out-li").style.visibility = "hidden"
+    }
+    </script>
+ <div class="products"> {% for i in response %}
+        <div class="product">
+          <img src="{% if i.img != " 0 "or "null" or 0 %} {{ i.img }} {% elif i.img == "null" %} {{ "https://via.placeholder.com/100x100" }} {% endif %}">
+
+          <p>{{ i }}</p>
+      </div>
+     </div>
+ {% endfor %}
+{% endblock %}
