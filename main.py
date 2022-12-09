@@ -1,3 +1,4 @@
+# Import necessary modules
 import codecs
 import json
 import logging
@@ -9,44 +10,46 @@ from flask import jsonify
 from pymongo import MongoClient
 import datetime
 import os
-app = Flask(__name__)
-logged_in = False
 
+# Create a Flask app instance
+app = Flask(__name__)
+
+# Initialize the "logged_in" and "email_name" variables
+logged_in = False
 email_name = ""
+
+# Define a route for "/" and "/home" URLs
 @app.route('/')
 @app.route('/home')
 def home():
     print(logged_in)
-    return render_template('home.html', logged_in=logged_in)
+    # Render the "home.html" template
+    return render_template('home.html')
 
-
+# Define a route for the "/about" URL
 @app.route('/about', methods=["GET", "POST"])
 def about():
     return render_template('about.html')
 
-
+# Define a route for the "/register" URL
 @app.route('/register', methods=["GET", "POST"])
 def form():
     return render_template('register.html')
 
 
-# [END form]
-# [START submitted]
+# Define a route for the "/submitted" URL, allowing both GET and POST requests
 @app.route('/submitted', methods=["GET", "POST"])
 def submitted_form():
     name = request.form['name']
     email = request.form['email']
     site = request.form['site_url']
     comments = request.form['comments']
-    # [END submitted]
-    # [START render_template]
     return render_template(
         'submitted_form.html',
         name=name,
         email=email,
         site=site,
         comments=comments)
-    # [END render_template]
 
 
 # -------------------------------------------
@@ -89,77 +92,85 @@ def display():
     data = json.loads(jResponse)
     return jsonify(data)
 
-
-# cloud function <- test TEST TEST TEST
+# Define the /shop route and view function allowing both GET and POST methods
 @app.route("/shop", methods=["GET", "POST"])
 def hello():
+    # Set the URL for the shop-items cloud function
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
+
+    # Make a GET request to the URL and get the response
     response = requests.get(url)
+
+    # Convert the response content to a string
     responseString = response.content
     responseString = str(responseString)
+
+    # Remove the first and last characters from the response string
     responseString = responseString[3:-2]
 
+    # Create a new string that contains the response data in a JSON array
     responseString2 = "{\"items\":[" + responseString + "]}"
-    data = json.loads(responseString2)
-    print(data)
-    print(data["items"][0]["name"])
-    itemArray = data["items"]
-    print(itemArray[0])
 
+    # Load the JSON data into a Python dictionary
+    data = json.loads(responseString2)
+
+    # Connect to the MongoDB cluster and get the "Shop" database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    # connect to the db
     db = client.Shop
     collection = db.Items
 
+    # If the request method is POST, get the product and email & product values
+    # from the request form and insert them into the "basket" collection
     if request.method == "POST":
         product = request.form["product"]
         emailusername = request.form["emailusername"]
 
-        print("PRODUCT ,", product)
         collection = db.basket
 
         collection.insert_one({"email": f"{emailusername}", "product": f"{product}"})
 
+    # Render the shop.html template, passing the products data to the template
     return render_template("shop.html", response=data["items"])
 
-
+# Define the /login route and render login.html template
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return render_template("login.html")
 
+# Define the /logged route and view function allowing POST method
 @app.route("/logged-in", methods=["POST"])
 def logged_in():
+
+    # set global variable
     global logged_in, email_name
+
+    # get the JSON data from the POST request which is made when the user has a successful sign in
     output = request.get_json()
-    #print(output)  # This is the output that was stored in the JSON within the browser
-    #print(type(output))
-    result = json.loads(output)  # this converts the json output to a python dictionary
-     # this shows the json converted as a python dictionary
+
+    # convert the JSON output to a Python dictionary
+    result = json.loads(output)
+
+     # set email_name as the email of the user which successfully signed on. Data comes from ^ JSON request
     email_name = result["firstname"]
     logged_in = True
-    #print(email_name)
 
     # Set environment variables
     os.environ['email'] = email_name
 
-    # get the environment variable
-
-    prints()
-
+    # Return the result as JSON
     return result
-def prints():
-    print("prints function",email_name, logged_in)
 
-
-
+# Define the /write-reviews route and view function allowing POST and GET method
 @app.route("/write-reviews", methods=["GET", "POST"])
 def writeReviews():
+    # render the write-reviews.html template
     return render_template("write-reviews.html")\
 
-
+# Define the /comments route and view function allowing POST and GET method
 @app.route("/comments", methods=["GET", "POST"])
 def comments():
-    global name, review
+
+    # Set the URL for the reviews cloud function
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/reviews"
     response = requests.get(url)
     responseString = response.content
@@ -169,11 +180,13 @@ def comments():
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
 
+    # Connet to MongoDB database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     # connect to the db
     db = client.Shop
     collection = db.reviews
 
+    # if request is POST get data from the request -> format it as a python dictionary and insert into database
     if request.method == "POST":
         name = request.form["name"]
         review = request.form["review"]
@@ -185,18 +198,22 @@ def comments():
         }
         insert_user = collection.insert_one(data)
 
+    # get reviews from the database
     myCursor = db.reviews.find({})
     list_cur = list(myCursor)
 
+    # render the comments.html template with the reviews data
     return render_template("comments.html", response=list_cur)
 
+# Define the /sign-out route
 @app.route('/sign_out.html')
 def sign_out():
     return render_template('sign_out.html')
 
-
+# Define the /admin route and view function allowing POST and GET method
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+    # Set the URL for the shop-items cloud function and get the data -> format the string into JSON then into python dict
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
     response = requests.get(url)
     responseString = response.content
@@ -205,31 +222,41 @@ def admin():
 
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
+
+    # Connect to MongoDB database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     db = client.Shop
     collection = db.Items
 
+    # If request method is post get the form data from /admin
     if request.method == "POST":
         item = request.form["item"]
         itemName = request.form["itemName"]
-
+        # if item and itemName are not null / have values
         if item and itemName:
+
+            # Find the specific item in the database
             a = collection.find_one({"name": f"{itemName}"})
             print(item, itemName, a)
             myquery = {"name": f"{itemName}"}
+
+            # update the stock of the specific item
             newvalues = {"$set": {"stock": f"{item}"}}
             collection.update_one(myquery, newvalues)
 
-
+    # render the admin.html template with the data
     return render_template("admin.html", response=data["items"])
 
+# /add items has GET and POST request. This function will add whole products to the Items collection of the shop database
 @app.route("/add_items", methods=["GET", "POST"])
 def addItems():
+    # connect to the MongoDB database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     db = client.Shop
     collection = db.Items
 
     if request.method == "POST":
+        # get data from the request
         name = request.form["name"]
         price = request.form["price"]
         bluetooth = request.form["bluetooth"]
@@ -240,7 +267,8 @@ def addItems():
         ram = request.form["ram"]
         stock = request.form["stock"]
         gpu = request.form["gpu"]
-
+        
+        # insert the item/product into the database
         collection.insert_one({
             "name": f"{name}",
             "price": f"{price}",
@@ -253,11 +281,15 @@ def addItems():
             "stock": f"{stock}",
             "gpu": f"{gpu}"
         })
-
+    
     return render_template("add_items.html")
 
+# /delete_items consists of POST and GET request. This route and function shows all the products and allows the admin to 
+# delete products from the Items collection
 @app.route("/delete_items", methods=["POST", "GET"])
 def deleteItems():
+    
+    # Connect to the shop-items cloud function URL and get the data -> make it into python dict
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
     response = requests.get(url)
     responseString = response.content
@@ -266,24 +298,29 @@ def deleteItems():
 
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
+    
+    # Connect to the MongoDB database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     db = client.Shop
     collection = db.Items
 
+    # if request method is POST
     if request.method == "POST":
-
+        # get item from the request
         item = request.form["item"]
 
-        print(item)
-        myquery = {"name": f"{item}"}
-
+        # delete the item based on its name
         collection.delete_one({"name": f"{item}"})
 
+    # render the delete_items template with the data of the shop items
     return render_template("delete_items.html", response=data["items"])
 
-
+# /delete_items consists of POST and GET request. This route and function shows all of the 
+# items within the logged-in users' basket.
 @app.route("/basket", methods=["GET", "POST"])
 def basket():
+
+    # Connect to get-basket-items google cloud functions URL and make the response into python dict
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/get-basket-items"
     response = requests.get(url)
     responseString = response.content
@@ -292,22 +329,31 @@ def basket():
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
     product_list = []
-    #print(" this data now", data)
+
+    # This function sorts the items in each users basket based on their email
+    # in the form of "email": "product"
+    # so for each key of "email" get all of the products value
     for x in data["items"]:
         print(x["email"], x["product"], os.getenv('email'))
+
+        # if the email in the iteration is the same as the one of the user who is currently logged in
+        # add to the product_list which will be displayed on basket.html
         if x["email"] == os.getenv('email'):
             product_list.append(x["product"])
     print(product_list, "product list")
     print("os stuff",os.getenv('email'))
 
+    # render basket.html and send the list of products in the currently logged in users basket
     return render_template("basket.html", response=product_list)
+
+# handles 500 error and returns exception.
 @app.errorhandler(500)
 def server_error(e):
     # Log the error and stacktrace.
     logging.exception('An error occurred during a request.')
     return 'An internal error occurred.', 500
 
-
+# handles 404 errors returns 404.html
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
