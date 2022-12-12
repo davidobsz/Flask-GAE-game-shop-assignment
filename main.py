@@ -288,7 +288,6 @@ def addItems():
 # delete products from the Items collection
 @app.route("/delete_items", methods=["POST", "GET"])
 def deleteItems():
-    
     # Connect to the shop-items cloud function URL and get the data -> make it into python dict
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
     response = requests.get(url)
