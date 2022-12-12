@@ -30,6 +30,7 @@
     </div>
   </div>
   <p id="false-false" style="visibility: hidden">False</p>
+  <p id="allowed-or-not" style="visibility: hidden"></p>
   <script type = "module" src = "/static/app.js"></script>
 <p id="paragraph2"></p>
 </body>
@@ -61,6 +62,7 @@ if (sessionStorage.getItem("email") != null){
 }
 
 document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+document.getElementById("allowed-or-not").innerHTML = sessionStorage.getItem("logged-in-t-f")
 
         if (sessionStorage.getItem("email") == null){
         document.getElementById("sign-out-li").style.visibility = "hidden"
