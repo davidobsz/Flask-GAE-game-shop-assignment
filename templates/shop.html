@@ -67,7 +67,7 @@
     <body>
     <div class="products"> {% for i in response %}
         <div class="product">
-          <img src="{% if i.img != " 0 "or "null" or 0 %} {{ i.img }} {% elif i.img == "null" %} {{ "https://via.placeholder.com/100x100" }} {% endif %}">
+          <img src="{% if i.img != "0" or 0 or null%} {{ i.img }} {% else %} {{ "https://via.placeholder.com/100?text=No+Image+Available" }} {% endif %}">
           <h3>{{ i.name }}</h3>
           <p>£ {{ i.price }}</p>
             <div>
