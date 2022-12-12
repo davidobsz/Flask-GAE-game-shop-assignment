@@ -89,7 +89,7 @@ class TestApp(unittest.TestCase):
     def test_updating_stock_amount(self):
         with app.test_request_context():
             data = {
-                "item": "3",
+                "item": "5",
                 "itemName": "PS5"
             }
 

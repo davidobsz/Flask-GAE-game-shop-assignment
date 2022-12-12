@@ -79,7 +79,7 @@
                 <p>GPU: {{ i.gpu }}</p>
             <strong class="stocks-class">LEFT IN STOCK: {{ i.stock }}</strong>
             </div>
-        <form method="post">
+        <form method="post" action="/shop">
             <input value="{{ i.name }}" name="product" class="hide">
             <input id="hidden" class="needemail" value="" name="emailusername" class="hide">
             <style>

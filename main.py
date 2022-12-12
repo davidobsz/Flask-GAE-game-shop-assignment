@@ -146,7 +146,6 @@ def logged_in():
 
     # get the JSON data from the POST request which is made when the user has a successful sign in
     output = request.get_json()
-
     # convert the JSON output to a Python dictionary
     result = json.loads(output)
 
@@ -156,6 +155,8 @@ def logged_in():
 
     # Set environment variables
     os.environ['email'] = email_name
+
+    print("email_name", email_name)
 
     # Return the result as JSON
     return result
@@ -329,12 +330,11 @@ def basket():
     data = json.loads(responseString2)
     product_list = []
 
-    # This function sorts the items in each users basket based on their email
+    # This function sorts the items in each user's basket based on their email
     # in the form of "email": "product"
     # so for each key of "email" get all of the products value
     for x in data["items"]:
         print(x["email"], x["product"], os.getenv('email'))
-
         # if the email in the iteration is the same as the one of the user who is currently logged in
         # add to the product_list which will be displayed on basket.html
         if x["email"] == os.getenv('email'):
@@ -342,7 +342,13 @@ def basket():
     print(product_list, "product list")
     print("os stuff",os.getenv('email'))
 
-    # render basket.html and send the list of products in the currently logged in users basket
+    if request.method == "POST":
+        product = request.form["product"]
+        product_list.append(product)
+        print(product, "PRODUCT HERE")
+        return render_template("basket.html", response=product_list)
+
+    # render basket.html and send the list of products in the currently logged-in users basket
     return render_template("basket.html", response=product_list)
 
 # handles 500 error and returns exception.
