@@ -11,6 +11,8 @@ from pymongo import MongoClient
 import datetime
 import os
 
+
+
 # Create a Flask app instance
 app = Flask(__name__)
 
@@ -355,12 +357,50 @@ def basket():
     return render_template("basket.html", response=data)
 
 
+
+import stripe
+stripe.api_key = "rk_test_51MEg5JD68JztsQwgsOWYza5hLUE1cdK9haRBoXTrcnm2M1SAGbSDb5xSiQG5x8J2u5OaWhb4O0ZIm5VjGkojIKKy00XaSLfk6L"
 @app.route("/checkout", methods=["POST"])
 def checkoout():
+    total=0
+    if request.method == "POST":
+        render_template("checkout.html")
+    return render_template("checkout.html")
+
+
+
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
     if request.method == "POST":
         product = request.form["product"]
-        price = request.form["price"]
-    return render_template("checkout.html")
+        print(product)
+        client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+        db = client.Shop
+        collection = db.Items
+        result = collection.find_one({"name": f"{product}"})
+        #collection.find_one({"name", f"{product}"})
+        price = result["price"]
+        price = price.split(".")
+        price = f"{price[0]}{price[1]}"
+        print(price, "PRICE")
+        session = stripe.checkout.Session.create(
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': f'{product}',
+                    },
+                    'unit_amount': int(price),
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='http://localhost:4242/success',
+            cancel_url='http://localhost:4242/cancel',
+        )
+        return redirect(session.url, code=303)
+    return "404.html"
 
 
 # handles 500 error and returns exception.

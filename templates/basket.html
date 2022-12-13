@@ -15,6 +15,11 @@
             <input style="visibility: hidden" name="product" value ={{ i.product }}>
             <button class="button" type="submit">Delete</button>
         </form>
+        <form action="/create-checkout-session" method="POST">
+             <input name="product" value="{{ i.product }}">
+            <button type="submit">Buy</button>
+        </form>
+
      </li>
  {% endfor %}
  </ul>
@@ -24,7 +29,7 @@
     <div id="checkout">
         <h3>Checkout Here</h3>
         <form method="post" action="/checkout">
-            <button type="submit">Checkout</button>
+            <button type="submit" onsubmit="calculateTotal()">Checkout</button>
         </form>
     </div>
 
@@ -47,7 +52,7 @@ const ul = document.querySelector('#basket-ul');
 {##}
 {#// Get all the li elements within the ul element#}
 const lis = ul.querySelectorAll('li');
-
+var list = []
 // Loop through each li element
 lis.forEach(li => {
 
@@ -61,6 +66,10 @@ lis.forEach(li => {
         li.style.display = 'none';
     }
 });
+
+function calculateTotal(){
+
+}
 
 </script>
 {% endblock %}
