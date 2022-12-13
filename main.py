@@ -360,16 +360,9 @@ def basket():
 
 import stripe
 stripe.api_key = "rk_test_51MEg5JD68JztsQwgsOWYza5hLUE1cdK9haRBoXTrcnm2M1SAGbSDb5xSiQG5x8J2u5OaWhb4O0ZIm5VjGkojIKKy00XaSLfk6L"
-@app.route("/checkout", methods=["POST"])
-def checkoout():
-    total=0
-    if request.method == "POST":
-        render_template("checkout.html")
-    return render_template("checkout.html")
 
 
-
-
+# sets up payment based on what is clicked in the "buy" on the /shop route
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     if request.method == "POST":
