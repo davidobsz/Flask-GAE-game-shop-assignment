@@ -69,7 +69,7 @@ createacctbtn.addEventListener("click", function() {
       const errorMessage = error.message;
       document.getElementById("allowed-or-not").innerHTML= "FALSE-LOGGED-IN-NOT"
       // ..
-      //window.alert("Error occurred. Try again.");
+      window.alert("Error occurred. Try again.");
     });
   }
 });
@@ -102,7 +102,7 @@ submitButton.addEventListener("click", function() {
       sessionStorage.setItem("logged-in-t-f", "FALSE-NOALLOWED-LOGGED-OUT")
       document.getElementById("allowed-or-not").innerHTML = sessionStorage.getItem("logged-in-t-f")
       console.log("Error occurred. Try again.");
-      window.alert("Error occurred. Try again.");
+      //window.alert("Error occurred. Try again.");
     });
 });
 
@@ -129,7 +129,6 @@ returnBtn.addEventListener("click", function() {
             type:"POST",
             contentType: "application/json",
             data: JSON.stringify(s)});
-
 }
 
 

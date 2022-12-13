@@ -124,9 +124,7 @@ def hello():
     if request.method == "POST":
         product = request.form["product"]
         emailusername = request.form["emailusername"]
-
         collection = db.basket
-
         collection.insert_one({"email": f"{emailusername}", "product": f"{product}"})
 
     # Render the shop.html template, passing the products data to the template
@@ -333,23 +331,18 @@ def basket():
     # This function sorts the items in each user's basket based on their email
     # in the form of "email": "product"
     # so for each key of "email" get all of the products value
-    for x in data["items"]:
-        print(x["email"], x["product"], os.getenv('email'))
-        # if the email in the iteration is the same as the one of the user who is currently logged in
-        # add to the product_list which will be displayed on basket.html
-        if x["email"] == os.getenv('email'):
-            product_list.append(x["product"])
-    print(product_list, "product list")
-    print("os stuff",os.getenv('email'))
+    # for x in data["items"]:
+    #     print(x["email"], x["product"])
+    #     # if the email in the iteration is the same as the one of the user who is currently logged in
+    #     # add to the product_list which will be displayed on basket.html
+    #     #if x["email"] == os.getenv('email'):
+    #     product_list.append([x["product"], x["email"]])
+    # print(product_list, "product list")
+    # print("os stuff",os.getenv('email'))
 
-    if request.method == "POST":
-        product = request.form["product"]
-        product_list.append(product)
-        print(product, "PRODUCT HERE")
-        return render_template("basket.html", response=product_list)
 
     # render basket.html and send the list of products in the currently logged-in users basket
-    return render_template("basket.html", response=product_list)
+    return render_template("basket.html", response=data)
 
 # handles 500 error and returns exception.
 @app.errorhandler(500)

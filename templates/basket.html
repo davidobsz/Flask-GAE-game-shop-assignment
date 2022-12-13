@@ -8,12 +8,51 @@
         document.getElementById("sign-out-li").style.visibility = "hidden"
     }
     </script>
- <div class="products"> {% for i in response %}
-        <div class="product">
-          <img src="{% if i.img != " 0 "or "null" or 0 %} {{ i.img }} {% elif i.img == "null" %} {{ "https://via.placeholder.com/100x100" }} {% endif %}">
-
-          <p>{{ i }}</p>
-      </div>
-     </div>
+ <div class="products"> <div class="product"><ul id="basket-ul">{% for i in response["items"] %}
+        <li class="{{ i.email }}">{{ i.product }}</li>
  {% endfor %}
+ </ul>
+ </div>
+ </div>
+
+{#    <p>{{ response["items"][0].email }}</p>#}
+{#    {% for i in response["items"] %}#}
+{#        <p class="{{ i.email }}">{{ i.product }}</p>#}
+{#    {% endfor %}#}
+
+
+<script>
+var basket_items = document.getElementById("basket-ul")
+var email = document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
+console.log("shown below")
+console.log(email, "email")
+
+
+
+const ul = document.querySelector('#basket-ul');
+{##}
+{#// Get all the li elements within the ul element#}
+const lis = ul.querySelectorAll('li');
+
+// Loop through each li element
+lis.forEach(li => {
+
+    // If the li element has a class of "x", show it
+    if (li.classList.contains(`${email}`)) {
+        li.style.display = 'block';
+
+    }
+    // If the li element has a class of "y", hide it
+    else {
+        li.style.display = 'none';
+    }
+});
+
+</script>
 {% endblock %}
+
+
+
+
+
+
