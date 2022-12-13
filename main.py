@@ -18,6 +18,7 @@ app = Flask(__name__)
 logged_in = False
 email_name = ""
 
+
 # Define a route for "/" and "/home" URLs
 @app.route('/')
 @app.route('/home')
@@ -26,10 +27,12 @@ def home():
     # Render the "home.html" template
     return render_template('home.html')
 
+
 # Define a route for the "/about" URL
 @app.route('/about', methods=["GET", "POST"])
 def about():
     return render_template('about.html')
+
 
 # Define a route for the "/register" URL
 @app.route('/register', methods=["GET", "POST"])
@@ -92,6 +95,7 @@ def display():
     data = json.loads(jResponse)
     return jsonify(data)
 
+
 # Define the /shop route and view function allowing both GET and POST methods
 @app.route("/shop", methods=["GET", "POST"])
 def hello():
@@ -130,15 +134,16 @@ def hello():
     # Render the shop.html template, passing the products data to the template
     return render_template("shop.html", response=data["items"])
 
+
 # Define the /login route and render login.html template
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return render_template("login.html")
 
+
 # Define the /logged route and view function allowing POST method
 @app.route("/logged-in", methods=["POST"])
 def logged_in():
-
     # set global variable
     global logged_in, email_name
 
@@ -147,7 +152,7 @@ def logged_in():
     # convert the JSON output to a Python dictionary
     result = json.loads(output)
 
-     # set email_name as the email of the user which successfully signed on. Data comes from ^ JSON request
+    # set email_name as the email of the user which successfully signed on. Data comes from ^ JSON request
     email_name = result["firstname"]
     logged_in = True
 
@@ -159,16 +164,18 @@ def logged_in():
     # Return the result as JSON
     return result
 
+
 # Define the /write-reviews route and view function allowing POST and GET method
 @app.route("/write-reviews", methods=["GET", "POST"])
 def writeReviews():
     # render the write-reviews.html template
-    return render_template("write-reviews.html")\
+    return render_template("write-reviews.html") \
+ \
+        # Define the /comments route and view function allowing POST and GET method
 
-# Define the /comments route and view function allowing POST and GET method
+
 @app.route("/comments", methods=["GET", "POST"])
 def comments():
-
     # Set the URL for the reviews cloud function
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/reviews"
     response = requests.get(url)
@@ -204,10 +211,12 @@ def comments():
     # render the comments.html template with the reviews data
     return render_template("comments.html", response=list_cur)
 
+
 # Define the /sign-out route
 @app.route('/sign_out.html')
 def sign_out():
     return render_template('sign_out.html')
+
 
 # Define the /admin route and view function allowing POST and GET method
 @app.route("/admin", methods=["GET", "POST"])
@@ -233,7 +242,6 @@ def admin():
         itemName = request.form["itemName"]
         # if item and itemName are not null / have values
         if item and itemName:
-
             # Find the specific item in the database
             a = collection.find_one({"name": f"{itemName}"})
             print(item, itemName, a)
@@ -245,6 +253,7 @@ def admin():
 
     # render the admin.html template with the data
     return render_template("admin.html", response=data["items"])
+
 
 # /add items has GET and POST request. This function will add whole products to the Items collection of the shop database
 @app.route("/add_items", methods=["GET", "POST"])
@@ -266,7 +275,7 @@ def addItems():
         ram = request.form["ram"]
         stock = request.form["stock"]
         gpu = request.form["gpu"]
-        
+
         # insert the item/product into the database
         collection.insert_one({
             "name": f"{name}",
@@ -280,10 +289,11 @@ def addItems():
             "stock": f"{stock}",
             "gpu": f"{gpu}"
         })
-    
+
     return render_template("add_items.html")
 
-# /delete_items consists of POST and GET request. This route and function shows all the products and allows the admin to 
+
+# /delete_items consists of POST and GET request. This route and function shows all the products and allows the admin to
 # delete products from the Items collection
 @app.route("/delete_items", methods=["POST", "GET"])
 def deleteItems():
@@ -296,7 +306,7 @@ def deleteItems():
 
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
-    
+
     # Connect to the MongoDB database
     client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
     db = client.Shop
@@ -313,11 +323,11 @@ def deleteItems():
     # render the delete_items template with the data of the shop items
     return render_template("delete_items.html", response=data["items"])
 
-# /delete_items consists of POST and GET request. This route and function shows all of the 
+
+# /delete_items consists of POST and GET request. This route and function shows all of the
 # items within the logged-in users' basket.
 @app.route("/basket", methods=["GET", "POST"])
 def basket():
-
     # Connect to get-basket-items google cloud functions URL and make the response into python dict
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/get-basket-items"
     response = requests.get(url)
@@ -328,21 +338,30 @@ def basket():
     data = json.loads(responseString2)
     product_list = []
 
-    # This function sorts the items in each user's basket based on their email
-    # in the form of "email": "product"
-    # so for each key of "email" get all of the products value
-    # for x in data["items"]:
-    #     print(x["email"], x["product"])
-    #     # if the email in the iteration is the same as the one of the user who is currently logged in
-    #     # add to the product_list which will be displayed on basket.html
-    #     #if x["email"] == os.getenv('email'):
-    #     product_list.append([x["product"], x["email"]])
-    # print(product_list, "product list")
-    # print("os stuff",os.getenv('email'))
+    # Connect to MongoDB databse to be able to query the database and remove things from
+    # Basket on press of delete button
+    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+    db = client.Shop
+    collection = db.basket
 
+    # This code below takes the email and product from the post request and deletes it from the MongoDB
+    if request.method == "POST":
+        email = request.form["email"]
+        product = request.form["product"]
+        print(email, product)
+        collection.delete_one({"email": f"{email}", "product": f"{product}"})
 
     # render basket.html and send the list of products in the currently logged-in users basket
     return render_template("basket.html", response=data)
+
+
+@app.route("/checkout", methods=["POST"])
+def checkoout():
+    if request.method == "POST":
+        product = request.form["product"]
+        price = request.form["price"]
+    return render_template("checkout.html")
+
 
 # handles 500 error and returns exception.
 @app.errorhandler(500)
@@ -350,6 +369,7 @@ def server_error(e):
     # Log the error and stacktrace.
     logging.exception('An error occurred during a request.')
     return 'An internal error occurred.', 500
+
 
 # handles 404 errors returns 404.html
 @app.errorhandler(404)

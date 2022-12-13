@@ -9,11 +9,24 @@
     }
     </script>
  <div class="products"> <div class="product"><ul id="basket-ul">{% for i in response["items"] %}
-        <li class="{{ i.email }}">{{ i.product }}</li>
+        <li class="{{ i.email }}">{{ i.product }}<br>
+         <form method="post">
+            <input style="visibility: hidden" name="email" value="{{ i.email }}">
+            <input style="visibility: hidden" name="product" value ={{ i.product }}>
+            <button class="button" type="submit">Delete</button>
+        </form>
+     </li>
  {% endfor %}
  </ul>
  </div>
  </div>
+
+    <div id="checkout">
+        <h3>Checkout Here</h3>
+        <form method="post" action="/checkout">
+            <button type="submit">Checkout</button>
+        </form>
+    </div>
 
 {#    <p>{{ response["items"][0].email }}</p>#}
 {#    {% for i in response["items"] %}#}
@@ -26,6 +39,7 @@ var basket_items = document.getElementById("basket-ul")
 var email = document.getElementById("true-false").innerHTML = sessionStorage.getItem("email")
 console.log("shown below")
 console.log(email, "email")
+
 
 
 
