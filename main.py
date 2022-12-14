@@ -106,7 +106,7 @@ def login():
 
 # Define the /logged route and view function allowing POST method
 @app.route("/logged-in", methods=["POST"])
-def logged_in():
+def logged_in_fun():
     # set global variable
     global logged_in, email_name
 
@@ -339,7 +339,7 @@ def create_checkout_session():
             }],
             mode='payment',
             success_url='http://localhost:4242/success',
-            cancel_url='http://127.0.0.1:5000/home',
+            cancel_url='/',
         )
         # redirect to the payment url
         return redirect(session.url, code=303)

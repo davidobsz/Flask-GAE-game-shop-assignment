@@ -8,5 +8,5 @@ google-auth==2.14.1
 
 mysqlclient==2.1.1
 mysql-connector-python==8.0.31
-
+stripe==5.0.0
 mysql~=0.0.3
