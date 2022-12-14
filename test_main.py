@@ -100,6 +100,22 @@ class TestApp(unittest.TestCase):
             # Check if the response has a 200 status code (indicating success)
             self.assertEqual(response.status_code, 200)
 
+    # This test will test the payment function using the PS5 as being pressed from the /basket
+    def test_payment(self):
+        with app.test_request_context():
+            data = {
+                "product": "PS5"
+            }
+
+            # Make a POST request to the /create-checkout-session route with the data
+            # This should act as a post method and create a checkout session with Stripe
+            response = self.app.post('/create-checkout-session', data=data)
+
+            # Check if the response has a 303 status code (indicating success)
+            # 303 indicates server successfully received the data associated with the request
+            # and redirected to the payment page URL.
+
+            self.assertEqual(response.status_code, 303)
 
 
     # This test if passed shows that all is OK with the write-reviews page.
