@@ -339,7 +339,7 @@ def create_checkout_session():
             }],
             mode='payment',
             success_url='http://localhost:4242/success',
-            cancel_url='/',
+            cancel_url='http://localhost:4242/cancel',
         )
         # redirect to the payment url
         return redirect(session.url, code=303)
