@@ -2,7 +2,6 @@
 import codecs
 import json
 import logging
-
 import requests
 from bson.json_util import dumps
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -10,12 +9,14 @@ from flask import jsonify
 from pymongo import MongoClient
 import datetime
 import os
+import stripe
+
 
 
 
 # Create a Flask app instance
 app = Flask(__name__)
-
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 # Initialize the "logged_in" and "email_name" variables
 logged_in = False
 email_name = ""
@@ -58,45 +59,6 @@ def submitted_form():
 
 
 # -------------------------------------------
-cluster = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-db = cluster["Pythontest"]
-collection = db["Students"]
-products = db["fs.files"]
-
-
-def get_mongodb_items():
-    # Search data from Mongodb
-    myCursor = None
-    # create queries
-    title_query = {"Unit title": {"$eq": "IoT Unit"}}
-    author_query = {"Unit leader": {"$eq": "Xin"}}
-    dateCreated_query = {"dateCreated": {"$eq": 2021}}
-    myCursor = collection.find({"$and": [title_query, author_query, dateCreated_query]})
-    list_cur = list(myCursor)
-    print(list_cur)
-    json_data = dumps(list_cur)
-    return json_data
-
-
-def store_mongodb(Unittitle, Unitleader, content, dateCreated, thumbnail):
-    # Write to MongoDB
-    json_data = {"Unit title": Unittitle, "Unit leader": Unitleader, "dateCreated": dateCreated, "thumbnail": thumbnail,
-                 "content": content}
-    collection.insert_one(json_data)
-
-
-@app.route('/unit')
-def Post_Mongo():
-    store_mongodb('IoT Unit', 'Xin', 'Welcome to IoT Unit', 2021, ',')
-    return "done"
-
-
-@app.route('/display', methods=["GET", "POST"])
-def display():
-    jResponse = get_mongodb_items()
-    data = json.loads(jResponse)
-    return jsonify(data)
-
 
 # Define the /shop route and view function allowing both GET and POST methods
 @app.route("/shop", methods=["GET", "POST"])
@@ -358,25 +320,33 @@ def basket():
 
 
 
-import stripe
+
 stripe.api_key = "rk_test_51MEg5JD68JztsQwgsOWYza5hLUE1cdK9haRBoXTrcnm2M1SAGbSDb5xSiQG5x8J2u5OaWhb4O0ZIm5VjGkojIKKy00XaSLfk6L"
 
 
-# sets up payment based on what is clicked in the "buy" on the /shop route
+# Sets up payment based on what is clicked in the "buy" on the /shop route
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+
+    # If request method is POST, i.e., If user presses "buy" button in basket
     if request.method == "POST":
         product = request.form["product"]
         print(product)
         client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
         db = client.Shop
         collection = db.Items
+
+        # Find item based on name from the DB that the user pressed "buy" on from the basket
         result = collection.find_one({"name": f"{product}"})
-        #collection.find_one({"name", f"{product}"})
+
+        # Make the result into an int.
         price = result["price"]
         price = price.split(".")
         price = f"{price[0]}{price[1]}"
         print(price, "PRICE")
+
+        # Create a stripe checkout session, with the product the user will buy
+        # information coming from the db
         session = stripe.checkout.Session.create(
             line_items=[{
                 'price_data': {
@@ -392,6 +362,7 @@ def create_checkout_session():
             success_url='http://localhost:4242/success',
             cancel_url='http://127.0.0.1:5000/home',
         )
+        # redirect to the payment url
         return redirect(session.url, code=303)
     return "404.html"
 

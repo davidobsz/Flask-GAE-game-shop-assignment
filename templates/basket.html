@@ -16,10 +16,9 @@
             <button class="button" type="submit">Delete</button>
         </form>
         <form action="/create-checkout-session" method="POST">
-             <input name="product" value="{{ i.product }}">
+             <input name="product" style="visibility: hidden" value="{{ i.product }}">
             <button type="submit">Buy</button>
         </form>
-
      </li>
  {% endfor %}
  </ul>
