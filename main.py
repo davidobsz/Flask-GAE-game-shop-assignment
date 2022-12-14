@@ -11,15 +11,19 @@ import datetime
 import os
 import stripe
 
-
-
-
 # Create a Flask app instance
 app = Flask(__name__)
 app.config['PREFERRED_URL_SCHEME'] = 'https'
-# Initialize the "logged_in" and "email_name" variables
+# Initialize the "logged_in", "email_name" and "Stripe API key" variables
 logged_in = False
 email_name = ""
+stripe.api_key = "rk_test_51MEg5JD68JztsQwgsOWYza5hLUE1cdK9haRBoXTrcnm2M1SAGbSDb5xSiQG5x8J2u5OaWhb4O0ZIm5VjGkojIKKy00XaSLfk6L"
+
+# Initialise the MongoDB
+# Connect to the MongoDB cluster and get the "Shop" database
+client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
+# Connect to the Shop db
+db = client.Shop
 
 
 # Define a route for "/" and "/home" URLs
@@ -62,7 +66,7 @@ def submitted_form():
 
 # Define the /shop route and view function allowing both GET and POST methods
 @app.route("/shop", methods=["GET", "POST"])
-def hello():
+def shop():
     # Set the URL for the shop-items cloud function
     url = "https://europe-west2-river-psyche-366910.cloudfunctions.net/shop-items"
 
@@ -81,11 +85,6 @@ def hello():
 
     # Load the JSON data into a Python dictionary
     data = json.loads(responseString2)
-
-    # Connect to the MongoDB cluster and get the "Shop" database
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    db = client.Shop
-    collection = db.Items
 
     # If the request method is POST, get the product and email & product values
     # from the request form and insert them into the "basket" collection
@@ -133,11 +132,10 @@ def logged_in():
 @app.route("/write-reviews", methods=["GET", "POST"])
 def writeReviews():
     # render the write-reviews.html template
-    return render_template("write-reviews.html") \
- \
-        # Define the /comments route and view function allowing POST and GET method
+    return render_template("write-reviews.html")
 
 
+# Define the /comments route and view function allowing POST and GET method
 @app.route("/comments", methods=["GET", "POST"])
 def comments():
     # Set the URL for the reviews cloud function
@@ -150,10 +148,7 @@ def comments():
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
 
-    # Connet to MongoDB database
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    # connect to the db
-    db = client.Shop
+    # Connect to Reviews db
     collection = db.reviews
 
     # if request is POST get data from the request -> format it as a python dictionary and insert into database
@@ -195,9 +190,7 @@ def admin():
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
 
-    # Connect to MongoDB database
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    db = client.Shop
+    # Connect to Items db
     collection = db.Items
 
     # If request method is post get the form data from /admin
@@ -222,9 +215,7 @@ def admin():
 # /add items has GET and POST request. This function will add whole products to the Items collection of the shop database
 @app.route("/add_items", methods=["GET", "POST"])
 def addItems():
-    # connect to the MongoDB database
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    db = client.Shop
+    # connect to the Items database
     collection = db.Items
 
     if request.method == "POST":
@@ -271,9 +262,7 @@ def deleteItems():
     responseString2 = "{\"items\":[" + responseString + "]}"
     data = json.loads(responseString2)
 
-    # Connect to the MongoDB database
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    db = client.Shop
+    # Connect to the Items database
     collection = db.Items
 
     # if request method is POST
@@ -304,8 +293,6 @@ def basket():
 
     # Connect to MongoDB databse to be able to query the database and remove things from
     # Basket on press of delete button
-    client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-    db = client.Shop
     collection = db.basket
 
     # This code below takes the email and product from the post request and deletes it from the MongoDB
@@ -319,21 +306,13 @@ def basket():
     return render_template("basket.html", response=data)
 
 
-
-
-stripe.api_key = "rk_test_51MEg5JD68JztsQwgsOWYza5hLUE1cdK9haRBoXTrcnm2M1SAGbSDb5xSiQG5x8J2u5OaWhb4O0ZIm5VjGkojIKKy00XaSLfk6L"
-
-
 # Sets up payment based on what is clicked in the "buy" on the /shop route
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-
     # If request method is POST, i.e., If user presses "buy" button in basket
     if request.method == "POST":
         product = request.form["product"]
         print(product)
-        client = MongoClient("mongodb+srv://d:d@cluster0.ccyermz.mongodb.net/?retryWrites=true&w=majority")
-        db = client.Shop
         collection = db.Items
 
         # Find item based on name from the DB that the user pressed "buy" on from the basket
