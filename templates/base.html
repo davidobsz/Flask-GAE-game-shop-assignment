@@ -25,8 +25,7 @@ nymous">
 - Jinja2 stuff related to generating nav and setting active state. Add more pages
 here! -->
 
- {% set navigation_bar = [('/', 'home', 'Home'), ('/about', 'about', 'About'), ('
-/register','register','Register'), ('/shop', 'shop', 'Shop'),("/basket", "basket","Basket"), ("/login", "login", "Login"), ("/write-reviews", "write-reviews", "Write-reviews"),("/comments", "comments", "Comments")] -%}
+ {% set navigation_bar = [('/', 'home', 'Home'), ('/about', 'about', 'About'), ('/shop', 'shop', 'Shop'),("/basket", "basket","Basket"), ("/login", "login", "Login"), ("/write-reviews", "write-reviews", "Write-reviews"),("/comments", "comments", "Comments")] -%}
  {% set active_page = active_page|default('home') -%}
  <body>
  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">

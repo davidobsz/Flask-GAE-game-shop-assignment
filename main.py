@@ -40,28 +40,6 @@ def home():
 def about():
     return render_template('about.html')
 
-
-# Define a route for the "/register" URL
-@app.route('/register', methods=["GET", "POST"])
-def form():
-    return render_template('register.html')
-
-
-# Define a route for the "/submitted" URL, allowing both GET and POST requests
-@app.route('/submitted', methods=["GET", "POST"])
-def submitted_form():
-    name = request.form['name']
-    email = request.form['email']
-    site = request.form['site_url']
-    comments = request.form['comments']
-    return render_template(
-        'submitted_form.html',
-        name=name,
-        email=email,
-        site=site,
-        comments=comments)
-
-
 # -------------------------------------------
 
 # Define the /shop route and view function allowing both GET and POST methods
