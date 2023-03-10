@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
             # Set the data to be sent with the POST request
             data = {
                 'name': 'Test User',
-                'review': 'This is a test review'
+                'review': 'This is a test review 22222'
             }
 
             # Make a POST request to the /comments route with the data

@@ -39,7 +39,7 @@ def home():
 @app.route('/about', methods=["GET", "POST"])
 def about():
     return render_template('about.html')
-
+2
 # -------------------------------------------
 
 # Define the /shop route and view function allowing both GET and POST methods

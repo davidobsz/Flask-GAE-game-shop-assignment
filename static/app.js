@@ -102,7 +102,7 @@ submitButton.addEventListener("click", function() {
       sessionStorage.setItem("logged-in-t-f", "FALSE-NOALLOWED-LOGGED-OUT")
       document.getElementById("allowed-or-not").innerHTML = sessionStorage.getItem("logged-in-t-f")
       console.log("Error occurred. Try again.");
-      window.alert("Error occurred. Try again.");
+      //window.alert("Error occurred. Try again.");
     });
 });
 
